@@ -112,7 +112,7 @@ class App extends React.Component {
       .then((response) => response.json())
 
       .then((response) => {
-        fetch("http://localhost:3000/image", {
+        fetch("https://smart-brainsbe.onrender.com/image", {
           method: "put",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
