@@ -123,10 +123,11 @@ class App extends React.Component {
             .then((response) => response.json())
             .then((count) => {
               this.setState(Object.assign(this.state.user, { entries: count }));
-              this.displayFaceBox(this.calculateFaceLocation(response)); // Move this line inside the inner .then() block
             })
             .catch(console.log);
         }
+
+        this.displayFaceBox(this.calculateFaceLocation(response));
       })
       .catch((error) => console.log("error", error));
   };
