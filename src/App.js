@@ -50,7 +50,7 @@ const returnClarifaiJSONRequest = (imageUrl) => {
 const initialState = {
   input: "",
   imageUrl: "",
-  box: [],
+  boxes: [],
   route: "signin",
   isSignedIn: false,
   user: {
