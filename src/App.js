@@ -50,7 +50,7 @@ const returnClarifaiJSONRequest = (imageUrl) => {
 const initialState = {
   input: "",
   imageUrl: "",
-  box: {},
+  box: [],
   route: "signin",
   isSignedIn: false,
   user: {
@@ -79,22 +79,35 @@ class App extends React.Component {
     });
   };
   calculateFaceLocation = (data) => {
-    const clarifaiFace =
-      data.outputs[0].data.regions[0].region_info.bounding_box;
     const image = document.getElementById("inputimage");
     const width = Number(image.width);
     const height = Number(image.height);
 
-    return {
-      leftCol: clarifaiFace.left_col * width,
-      topRow: clarifaiFace.top_row * height,
-      rightCol: width - clarifaiFace.right_col * width,
-      bottomRow: height - clarifaiFace.bottom_row * height,
-    };
+    const boxes = [];
+    if (data?.outputs?.length) {
+      for (const output of data.outputs) {
+        for (const region of output.data.regions) {
+          const {
+            left_col: leftCol,
+            top_row: topRow,
+            right_col: rightCol,
+            bottom_row: bottomRow,
+          } = region.region_info.bounding_box;
+
+          boxes.push({
+            leftCol: leftCol * width,
+            topRow: topRow * height,
+            rightCol: width - rightCol * width,
+            bottomRow: height - bottomRow * height,
+          });
+        }
+      }
+    }
+    return boxes;
   };
 
-  displayFaceBox = (box) => {
-    this.setState({ box: box });
+  displayFaceBox = (boxes) => {
+    this.setState({ boxes });
   };
   onInputChange = (event) => {
     this.setState({
@@ -160,7 +173,7 @@ class App extends React.Component {
               onButtonSubmit={this.onButtonSubmit}
             />
             <FaceRecognition
-              box={this.state.box}
+              boxes={this.state.boxes}
               imageUrl={this.state.imageUrl}
             />
           </div>
